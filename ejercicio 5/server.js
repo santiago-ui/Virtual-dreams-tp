@@ -5,13 +5,14 @@ const bodyParser = require('body-parser');
 const app = express();
 
 app.use(bodyParser.urlencoded({extended: false}));
+//le doy formato JSON
 app.use(bodyParser.json());
 
 app.post('/', (solicitud, resp) =>{
     console.log('POST');
 
     let cant = Object.values(solicitud.body).length;
-
+    //valido que la cantidad de datos ingresados no sea mayor a 3 y luego valido los datos
     if(cant <= 3 && validoEntrada(solicitud.body.apellido, solicitud.body.dni, solicitud.body.nombre)){
         request.post('https://reclutamiento-14cf7.firebaseio.com/personas.json',
         {
@@ -31,17 +32,18 @@ app.post('/', (solicitud, resp) =>{
     }
 });
 
+// funcion para validar los datos de entrada
 function validoEntrada(apellido, dni, nombre){
     if(dni && apellido){
+        //expresion regular para comprobar que lo ingresado corresponda a una cadena
         let cad = new RegExp("^[A-Za-z]+$");
         if(!cad.test(apellido) || (nombre && !cad.test(nombre))){
-            print("primer if mal");
             return false;
         }
 
         let dniString = dni.toString();
+        //me aseguro que el dni no tenga mas de 10 caracteres.
         if(dniString.length > 10){
-            print("dni mal");
             return false;
         }
         
